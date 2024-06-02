@@ -7,7 +7,7 @@ function setup() {
   createCanvas(window.innerWidth, window.innerHeight);
   angle = PI/2; // atribuindo valor ao angle
 
-  for (let i = 0; i < 1; i++)
+  for (let i = 0; i < 2; i++)
     circles[i] = {
       name: `circle ${i+1}`,
       angle: PI/2,
@@ -22,14 +22,15 @@ function setup() {
 }
 
 function draw() {
-  translate(width/2, height/2); // transformando o centro do canvas no eixo central para todas as formas
+  translate(width/2, height/2 - 80); // transformando o centro do canvas no eixo central para todas as formas
+
   background(220);
 
-  circles.forEach(element => {
+  circles.forEach((element) => {
     createCircle(element)
   });
-}
 
+}
 
 function createCircle(circleObject){
   let xVar = circleObject.initX + radius * cos(circleObject.angle); // coordenada x cartesiana
@@ -49,7 +50,7 @@ function createCircle(circleObject){
     circleObject.aceleration = (0.02 * circleObject.direction)
   }
   
-  if(circleObject.selected){
+  if(circleObject.selected ){
     // cria uma nova variável para salvar temporáriamente a posição do novo angulo, que será dado pelo mouse em relação ao círculo
     let newAngle = atan2(getMouseY() - circleObject.initY, getMouseX() - circleObject.initX)
     
@@ -59,17 +60,30 @@ function createCircle(circleObject){
     }
     
   }else{
+
     // nessa parte o angulo receberá qual a direção deve ir para voltar ao centro e a velocidade angular, que irá aumentando constantemente
     circleObject.angularVelocity += circleObject.aceleration;
     circleObject.angle += circleObject.angularVelocity;
     
-    if((circleObject.direction == 1 && circleObject.angle >= PI/2) || (circleObject.direction == -1 && circleObject.angle <= PI/2)){
-      circleObject.angle = PI/2
-      circleObject.direction *= -1
-      circleObject.aceleration *= -1
+    console.log(((circleObject.direction == 1 && circleObject.angle >= PI/2) || (circleObject.direction == -1 && circleObject.angle <= PI/2)), circleObject.name)
 
-      circleObject.angularVelocity *= 0.9
-      console.log(circleObject.angularVelocity)
+    if(((circleObject.direction == 1 && circleObject.angle >= PI/2 && circleObject.angularVelocity > 0) || (circleObject.direction == -1 && circleObject.angle <= PI/2  && circleObject.angularVelocity < 0))){
+      let nextCircle 
+      if (circleObject.direction == 1)
+        nextCircle = circles[0] 
+      else
+        nextCircle = circles[1]
+
+        circleObject.angle = PI/2
+      circleObject.angularVelocity * 0.95
+      
+      nextCircle.angle = circleObject.angle
+      nextCircle.direction = circleObject.direction * -1
+      nextCircle.aceleration = circleObject.aceleration * -1
+      nextCircle.angularVelocity = circleObject.angularVelocity * 0.95
+
+      circleObject.aceleration = 0
+      circleObject.angularVelocity = 0
     }
   }
 
@@ -77,7 +91,6 @@ function createCircle(circleObject){
   line(circleObject.initX, circleObject.initY, xVar, yVar);
   circle(xVar, yVar, diameter);
 }
-
 
 function mouseInCircle(circleObject){
   return dist(getMouseX(), getMouseY(), circleObject.initX, circleObject.initY + radius) <= diameter/2
@@ -88,5 +101,5 @@ function getMouseX(){
 }
 
 function getMouseY(){
-  return mouseY - height/2;
+  return mouseY - (height/2 - 80);
 }
