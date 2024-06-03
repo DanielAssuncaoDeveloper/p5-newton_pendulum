@@ -1,10 +1,7 @@
 const circles = []
-let lastCircles = []
 
-let testCircle = {}
-let alterarCirculo = false
-
-let acelerationLast = 0
+let firstCircle = {}
+let resetCircle = false
 
 let radius = 200; // raio/área que o círculo irá respeitar para se movimentar
 let diameter = 50; // diametro do cículo
@@ -17,8 +14,8 @@ function setup() {
     circles[i] = {
       name: `circle ${i+1}`,
       angle: PI/2,
-      initX: i * 51,
-      initY: 0,
+      initX: (i * 51) - 75,
+      initY: -50,
       direction: 1,
       selected: false,
       angularVelocity: 0,
@@ -26,19 +23,20 @@ function setup() {
     }
 }
 
-function draw() {
+function draw() {    
   translate(width/2, height/2 - 80); // transformando o centro do canvas no eixo central para todas as formas
+  background(44, 52, 64);
 
-  background(220);
-  
+  fill(23, 23, 23)
+  rect(-width/2, -50, width, 5)
+
   for (let i = 0; i < 4; i++)
     createCircle(circles[i], i)
-
-  if (alterarCirculo)
-    circles[0] = testCircle
-    
-
-  alterarCirculo = false
+  
+  if (resetCircle)
+    circles[0] = firstCircle
+  
+  resetCircle = false  
 }
 
 function createCircle(circleObject, index){
@@ -93,25 +91,21 @@ function createCircle(circleObject, index){
       nextCircle.angularVelocity = tempCircle.angularVelocity * 0.95
 
       if (index == 0){
-        testCircle = {...(circles[index])}
-        alterarCirculo = true
+        firstCircle = {...(circles[index])}
+        resetCircle = true
       }
       
     }
   }
 
   // desenha a linha e cículo, sem necessidade de comentário aqui né
+  stroke(23, 23, 23)
   line(circleObject.initX, circleObject.initY, xVar, yVar);
+
+  fill(204, 202, 202)
   circle(xVar, yVar, diameter);
 }
 
-
-function setCirclesToDefault(index){
-  if (circles[index].angularVelocity != 0 && lastCircles[index].angularVelocity != 0){
-    console.log(1)
-    circles.forEach(x => {x.aceleration = 0; x.angularVelocity = 0})
-  }
-}
 
 function getCartesianCoordinateX(circleObject){
   return circleObject.initX + radius * cos(circleObject.angle);
