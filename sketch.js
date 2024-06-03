@@ -61,6 +61,11 @@ function createCircle(circleObject, index){
     // cria uma nova variável para salvar temporáriamente a posição do novo angulo, que será dado pelo mouse em relação ao círculo
     let newAngle = atan2(getMouseY() - circleObject.initY, getMouseX() - circleObject.initX)
     
+    if (index == 0 || index == 1)
+      newAngle = Math.max(newAngle, PI/2)
+    else
+      newAngle = Math.min(newAngle, PI/2)
+
     // aqui delimita o movimento para até 90° cada lado, logo após atribui o valor novo ao ângulo
     if(newAngle >= 0 && newAngle <= PI){
       circleObject.angle = newAngle;
