@@ -13,7 +13,7 @@ function setup() {
   createCanvas(window.innerWidth, window.innerHeight);
   angle = PI/2; // atribuindo valor ao angle
 
-  for (let i = 0; i < 5; i++)
+  for (let i = 0; i < 4; i++)
     circles[i] = {
       name: `circle ${i+1}`,
       angle: PI/2,
@@ -31,7 +31,7 @@ function draw() {
 
   background(220);
   
-  for (let i = 0; i < 5; i++)
+  for (let i = 0; i < 4; i++)
     createCircle(circles[i], i)
 
   if (alterarCirculo)
